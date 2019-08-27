@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>goddag</title>
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+
+    <h1>Skriv navn</h1>
+    indtast navn her <input type="text" id="name"><button>ok</button>
+    <script>
+        let minTekst = "Goddag ";
+
+        const knap = document.querySelector("button");
+        knap.addEventListener("click", ok)
+
+        function ok() {
+            const navn = document.querySelector("#name").value;
+            console.log(minTekst + navn);
+        }
+    </script>
+</body></html>

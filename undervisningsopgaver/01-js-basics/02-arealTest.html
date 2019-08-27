@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>areal</title>
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <script>
+        let lang = 3;
+        let bredde = 500;
+        let minTekst = "længde * bredde er";
+        let areal;
+
+        areal = lang * bredde;
+
+        console.log(minTekst + lang * bredde);
+
+
+        if (areal < 100) {
+            console.log("for lille")
+        } else if (areal > 100 && areal < 200) {
+            console.log("a ok")
+        } else {
+            console.log("for stort")
+
+        }
+    </script>
+</body></html>
