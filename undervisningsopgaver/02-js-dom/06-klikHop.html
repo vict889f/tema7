@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,10 +34,18 @@
 
 
     <script>
+        document.addEventListener("DOMContentLoaded", start);
+
         const firkant = document.querySelector("div:nth-child(1)");
         const cirkel = document.querySelector("div:nth-child(2)");
 
-        firkant.innerHTML = '<img src="http://mabe-kea.dk/E19/pics/frog.png" alt="">'
-        cirkel.innerHTML = '<img src="http://mabe-kea.dk/E19/pics/pig.png">'
+        function start() {
+            console.log("content loaded")
+
+
+
+            firkant.innerHTML = '<img src="http://mabe-kea.dk/E19/pics/frog.png" alt="">'
+            cirkel.innerHTML = '<img src="http://mabe-kea.dk/E19/pics/pig.png">'
+        }
     </script>
 </body></html>
