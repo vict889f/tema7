@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -17,13 +17,19 @@
 
     </div>
     <script>
-        document.querySelector("#content");
-        console.log(document.querySelector("#content"));
-        console.log(document.querySelector("#content + div"));
-        console.log(document.querySelector("#content + div + div"));
-        console.log(document.querySelector("#content + div + div + div"));
-        console.log(document.querySelector("#content div a"));
-        console.log(document.querySelector("#content div + div a"));
-        console.log(document.querySelector("img"));
+        const content = document.querySelector("#content");
+        const første = document.querySelector("#content div");
+        const anden = document.querySelector("#content div:nth-child(2)");
+        const sidste = document.querySelector("#content img ");
+        //        const content = document.querySelector("#content div a"));
+        //        const content = document.querySelector("#content div + div a"));
+        //        const content = document.querySelector("img"));
+
+
+
+        console.log(content);
+        console.log(første);
+        console.log(anden);
+        console.log(sidste);
     </script>
 </body></html>
