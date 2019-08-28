@@ -23,6 +23,7 @@
             border-radius: 50%;
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -67,8 +68,13 @@
         }
 
         function stop() {
-            firkant.removeEventListener("click", clickGreen);
+            //            firkant.removeEventListener("click", flyt);
+            firkant.style.backgroundColor = "red";
+            cirkel.style.backgroundColor = "green";
 
         }
+
     </script>
-</body></html>
+</body>
+
+</html>
