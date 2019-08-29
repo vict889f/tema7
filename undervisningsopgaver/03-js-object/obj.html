@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <article>
+        <h1></h1>
+        <p class="email"></p>
+        <img src="" alt="">
+
+    </article>
+
+    <script>
+        const person = {
+            "fornavn": "Skeet",
+            "efternavn": "McGee",
+            "email": "skeet@mcgee.com",
+            "billede": "http://mabe-kea.dk/E19/pics/frog.png"
+        }
+
+        let tekst = "Mit fornavn er " + person.fornavn + " og mit efternavn er " + person.efternavn;
+        let tekst2 = `${person.fornavn} ${person.efternavn}`;
+
+        const navneContainer = document.querySelector("h1");
+        const emailContainer = document.querySelector("p");
+        const imgContainer = document.querySelector("img");
+
+        navneContainer.textContent = `${person.fornavn} ${person.efternavn}`;
+        emailContainer.textContent = `${person.email}`;
+        imgContainer.src = `${person.billede}`;
+    </script>
+</body></html>
