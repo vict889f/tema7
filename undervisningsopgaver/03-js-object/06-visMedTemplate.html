@@ -23,6 +23,29 @@
             border: solid black 1px;
             padding: 2vw;
         }
+
+        article:nth-child(even) {
+            background-color: aqua;
+        }
+
+        article:nth-child(odd) {
+            background-color: beige;
+        }
+
+        @media screen and (min-width:600px) {
+            .data-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width:1000px) {
+            .data-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+
+
+        }
     </style>
 </head>
 
