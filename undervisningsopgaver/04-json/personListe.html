@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Visalle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        img {
+            width: 100%;
+        }
+
+        #liste {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(1, 1fr);
+            max-width: 100px;
+            margin: ;
+
+        }
+
+        article {
+            border: solid black 1px;
+            padding: 2vw;
+        }
+
+        article:nth-child(even) {
+            background-color: aqua;
+        }
+
+        article:nth-child(odd) {
+            background-color: beige;
+        }
+
+        @media screen and (min-width:600px) {
+            #liste {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width:1000px) {
+            #liste {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <template>
+        <article>
+            <h2></h2>
+            <img src="" alt="">
+            <a href=""></a>
+        </article>
+    </template>
+    <section id="liste"></section>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", hentJson);
+        let personArray;
+
+        async function hentJson() {
+            console.log("hent json");
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
+
+            personArray = await jsonData.json();
+            visPersoner();
+        }
+
+        function visPersoner() {
+            const dest = document.querySelector("#liste");
+            const temp = document.querySelector("template");
+
+            personArray.feed.entry.forEach((person) => {
+                const klon = temp.cloneNode(true).content;
+                klon.querySelector("h2").textContent = person.gsx$navn.$t;
+                klon.querySelector("img").src = person.gsx$billede.$t;
+                klon.querySelector("a").textContent = `http://www.github.com/${person.gsx$github.$t}`;
+                klon.querySelector("a").href = `http://www.github.com/${person.gsx$github.$t}`;
+                dest.appendChild(klon);
+            })
+        }
+    </script>
+</body></html>
