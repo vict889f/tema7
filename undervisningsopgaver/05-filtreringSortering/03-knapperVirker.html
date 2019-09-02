@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Visalle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        img {
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #knapper {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        button {
+            border: solid 1px;
+            border-radius: 20%;
+
+        }
+
+        .valgt {
+            background-color: red;
+        }
+
+        #liste {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(1, 1fr);
+            max-width: 100px;
+            margin: ;
+
+        }
+
+        article {
+            border: solid black 1px;
+            padding: 2vw;
+        }
+
+        article:nth-child(even) {
+            background-color: aqua;
+        }
+
+        article:nth-child(odd) {
+            background-color: beige;
+        }
+
+        @media screen and (min-width:600px) {
+            #liste {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width:1000px) {
+            #liste {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <h1>Alle</h1>
+    <nav id="knapper">
+        <button class="filter valgt" data-køn="alle">Alle</button>
+        <button class="filter" data-køn="m">Mænd</button>
+        <button class="filter" data-køn="k">Kvinder</button>
+        <button class="filter" data-køn="andet">Andet</button>
+    </nav>
+
+    <template>
+        <article>
+            <h2></h2>
+            <img src="" alt="">
+            <a href=""></a>
+        </article>
+    </template>
+    <section id="liste"></section>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", hentJson);
+        let personArray;
+        let filter = "alle"
+        const dest = document.querySelector("#liste");
+        const temp = document.querySelector("template");
+
+        async function hentJson() {
+            console.log("hent json");
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
+
+            personArray = await jsonData.json();
+            visPersoner();
+            knapperVirker()
+        }
+
+        function visPersoner() {
+            dest.innerHTML = "";
+            personArray.feed.entry.forEach((person) => {
+                if (filter == "alle" || filter == person.gsx$køn.$t) {
+                    const klon = temp.cloneNode(true).content;
+                    klon.querySelector("h2").textContent = person.gsx$navn.$t;
+                    klon.querySelector("img").src = person.gsx$billede.$t;
+                    klon.querySelector("a").textContent = `http://www.github.com/${person.gsx$github.$t}`;
+                    klon.querySelector("a").href = `http://www.github.com/${person.gsx$github.$t}`;
+                    dest.appendChild(klon);
+                }
+            })
+        }
+
+        function knapperVirker() {
+            // får alle knapper til at virke
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+        }
+
+        function filtrering() {
+            filter = this.dataset.køn;
+
+            // styrer overskriften
+            document.querySelector("h1").textContent = this.textContent;
+
+            // knapperne skifter farve
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+
+            visPersoner();
+        }
+    </script>
+</body></html>
