@@ -21,8 +21,7 @@
         }
 
         button {
-            border-radius: 5%;
-
+            border-radius: 5%
         }
 
         .valgt {
@@ -61,8 +60,8 @@
             #liste {
                 grid-template-columns: repeat(3, 1fr);
             }
-
         }
+
     </style>
 
 
@@ -76,6 +75,9 @@
         <button class="filter" data-køn="m">Mænd</button>
         <button class="filter" data-køn="k">Kvinder</button>
         <button class="filter" data-køn="andet">Andet</button>
+
+        <button class="hold" data-hold="a">Hold a</button>
+        <button class="hold" data-hold="b">Hold b</button>
     </nav>
 
     <template>
@@ -91,7 +93,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", hentJson);
         let personArray;
-        let filter = "alle"
+        let køn = "alle"
+        let hold = "begge"
         const dest = document.querySelector("#liste");
         const temp = document.querySelector("template");
 
@@ -101,13 +104,15 @@
 
             personArray = await jsonData.json();
             visPersoner();
-            knapperVirker()
+            knapperVirkerKøn()
+            knapperVirkerHold()
+
         }
 
         function visPersoner() {
             dest.innerHTML = "";
             personArray.feed.entry.forEach((person) => {
-                if (filter == "alle" || filter == person.gsx$køn.$t) {
+                if (køn == "alle" && hold == "begge" || køn == person.gsx$køn.$t && hold == person.gsx$hold.$t || køn == "alle" && hold == person.gsx$hold.$t || køn == person.gsx$køn.$t && hold == "begge") {
                     const klon = temp.cloneNode(true).content;
                     klon.querySelector("h2").textContent = person.gsx$navn.$t;
                     klon.querySelector("img").src = person.gsx$billede.$t;
@@ -118,15 +123,15 @@
             })
         }
 
-        function knapperVirker() {
+        function knapperVirkerKøn() {
             // får alle knapper til at virke
             document.querySelectorAll(".filter").forEach(elm => {
-                elm.addEventListener("click", filtrering);
+                elm.addEventListener("click", filtreringKøn);
             })
         }
 
-        function filtrering() {
-            filter = this.dataset.køn;
+        function filtreringKøn() {
+            køn = this.dataset.køn;
 
             // styrer overskriften
             document.querySelector("h1").textContent = this.textContent;
@@ -139,5 +144,32 @@
 
             visPersoner();
         }
+
+
+
+        function knapperVirkerHold() {
+            // får alle knapper til at virke
+            document.querySelectorAll(".hold").forEach(elm => {
+                elm.addEventListener("click", filtreringHold);
+            })
+        }
+
+        function filtreringHold() {
+            hold = this.dataset.hold;
+
+            // styrer overskriften
+            document.querySelector("h1").textContent = this.textContent;
+
+            // knapperne skifter farve
+            document.querySelectorAll(".hold").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+
+            visPersoner();
+        }
+
     </script>
-</body></html>
+</body>
+
+</html>
