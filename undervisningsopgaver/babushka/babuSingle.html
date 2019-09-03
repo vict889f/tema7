@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Visalle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        img {
+            width: 120px;
+            height: 150px;
+            float: right;
+            object-fit: cover;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        #knapper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            margin-bottom: 20px;
+        }
+
+        button {
+            border-radius: 5%
+        }
+
+        .valgt {
+            background-color: red;
+        }
+
+        #liste {
+            display: grid;
+            grid-gap: 20px;
+            grid-template-columns: repeat(1, 1fr);
+            /*            max-width: 200px;*/
+            padding: 5vw;
+
+        }
+
+        .fullView {
+            border: solid black 1px;
+            padding: 2vw;
+            flex-direction: column;
+            height: 150px;
+        }
+
+        /*
+        #popup {
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.83);
+            display: none;
+
+
+
+        }
+*/
+        /*
+
+        .indhold {
+            width: 70vw;
+            height: 50vh;
+            background: #fff;
+            margin: 4rem auto;
+            padding: 10px;
+        }
+*/
+
+        /*
+        .luk {
+            position: fixed;
+            right: 0;
+            font-size: 2rem;
+        }
+*/
+
+        article:nth-child(even) {
+            background-color: aqua;
+        }
+
+        article:nth-child(odd) {
+            /*            background-color: beige;*/
+        }
+
+        @media screen and (min-width:600px) {
+            #liste {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width:1000px) {
+            #liste {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+    <template>
+        <article class="fullView">
+            <img src="" alt="">
+            <h2></h2>
+            <a href=""></a>
+        </article>
+    </template>
+
+
+    <h1>Alle</h1>
+    <h3>Alle</h3>
+    <nav id="knapper">
+        <button class="filter valgt" data-køn="alle">Alle Køn</button>
+        <button class="filter" data-køn="m">Mænd</button>
+        <button class="filter" data-køn="k">Kvinder</button>
+        <button class="filter" data-køn="andet">Andet</button>
+
+        <button class="hold valgt" data-hold="begge">Alle hold </button>
+        <button class="hold" data-hold="a">Hold a</button>
+        <button class="hold" data-hold="b">Hold b</button>
+    </nav>
+
+    <section id="liste"></section>
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", hentJson);
+        let personArray;
+        let køn = "alle"
+        let hold = "begge"
+        const dest = document.querySelector("#liste");
+        const temp = document.querySelector("template");
+
+
+        async function hentJson() {
+            console.log("hent json");
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
+
+            personArray = await jsonData.json();
+            visPersoner();
+            knapperVirkerKøn()
+            knapperVirkerHold()
+
+        }
+
+        function visPersoner() {
+            dest.innerHTML = "";
+            personArray.feed.entry.forEach((person) => {
+                if (køn == "alle" && hold == "begge" || køn == person.gsx$køn.$t && hold == person.gsx$hold.$t || køn == "alle" && hold == person.gsx$hold.$t || køn == person.gsx$køn.$t && hold == "begge") {
+                    const klon = temp.cloneNode(true).content;
+                    klon.querySelector("h2").textContent = `${person.gsx$navn.$t}, ${person.gsx$alder.$t}`;
+                    klon.querySelector("img").src = person.gsx$billede.$t;
+                    klon.querySelector("a").textContent = person.gsx$github.$t;
+                    klon.querySelector("a").href = `http://www.github.com/${person.gsx$github.$t}`;
+                    dest.appendChild(klon);
+
+                    dest.lastElementChild.addEventListener("click", () => {
+                        location.href = `singleView.html?github=${person.gsx$github.$t}`;
+                    });
+                }
+            })
+        }
+
+
+        function knapperVirkerKøn() {
+            // får alle knapper til at virke
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtreringKøn);
+            })
+        }
+
+        function filtreringKøn() {
+            køn = this.dataset.køn;
+
+            document.querySelector("h1").textContent = this.textContent;
+
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+
+            visPersoner();
+        }
+
+
+
+        function knapperVirkerHold() {
+
+            document.querySelectorAll(".hold").forEach(elm => {
+                elm.addEventListener("click", filtreringHold);
+            })
+        }
+
+        function filtreringHold() {
+            hold = this.dataset.hold;
+
+            document.querySelector("h3").textContent = this.textContent;
+
+            document.querySelectorAll(".hold").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+
+            visPersoner();
+        }
+
+    </script>
+</body>
+
+</html>
