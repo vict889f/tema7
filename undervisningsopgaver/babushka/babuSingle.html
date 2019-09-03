@@ -44,44 +44,14 @@
 
         }
 
-        .fullView {
+        #retter {
             border: solid black 1px;
             padding: 2vw;
             flex-direction: column;
             height: 150px;
         }
 
-        /*
-        #popup {
-            position: fixed;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.83);
-            display: none;
 
-
-
-        }
-*/
-        /*
-
-        .indhold {
-            width: 70vw;
-            height: 50vh;
-            background: #fff;
-            margin: 4rem auto;
-            padding: 10px;
-        }
-*/
-
-        /*
-        .luk {
-            position: fixed;
-            right: 0;
-            font-size: 2rem;
-        }
-*/
 
         article:nth-child(even) {
             background-color: aqua;
@@ -102,7 +72,6 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
-
     </style>
 
 
@@ -111,25 +80,23 @@
 <body>
 
     <template>
-        <article class="fullView">
-            <img src="" alt="">
+        <article id="retter">
+            <img class="billede" src="" alt="">
             <h2></h2>
-            <a href=""></a>
+            <p class="beskrivelse"></p>
+            <p class="pris">Pris:</p>
         </article>
     </template>
 
-
     <h1>Alle</h1>
-    <h3>Alle</h3>
-    <nav id="knapper">
-        <button class="filter valgt" data-køn="alle">Alle Køn</button>
-        <button class="filter" data-køn="m">Mænd</button>
-        <button class="filter" data-køn="k">Kvinder</button>
-        <button class="filter" data-køn="andet">Andet</button>
 
-        <button class="hold valgt" data-hold="begge">Alle hold </button>
-        <button class="hold" data-hold="a">Hold a</button>
-        <button class="hold" data-hold="b">Hold b</button>
+    <nav id="knapper">
+        <button class="filter valgt" data-kategori="alle">Alle</button>
+        <button class="filter" data-kategori="forretter">Forretter</button>
+        <button class="filter" data-kategori="hovedretter">Hovedretter</button>
+        <button class="filter" data-kategori="desserter">Desserter</button>
+        <button class="filter" data-kategori="drikkevarer">Drikkevarer</button>
+        <button class="filter" data-kategori="sideorders">Sideorders</button>
     </nav>
 
     <section id="liste"></section>
@@ -140,86 +107,59 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", hentJson);
-        let personArray;
-        let køn = "alle"
-        let hold = "begge"
+        let babushka;
+        let filter = "alle"
         const dest = document.querySelector("#liste");
         const temp = document.querySelector("template");
 
-
         async function hentJson() {
             console.log("hent json");
-            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
-
-            personArray = await jsonData.json();
-            visPersoner();
-            knapperVirkerKøn()
-            knapperVirkerHold()
-
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json");
+            babushka = await jsonData.json();
+            visRetter();
+            knapperVirker();
         }
 
-        function visPersoner() {
+        function visRetter() {
             dest.innerHTML = "";
-            personArray.feed.entry.forEach((person) => {
-                if (køn == "alle" && hold == "begge" || køn == person.gsx$køn.$t && hold == person.gsx$hold.$t || køn == "alle" && hold == person.gsx$hold.$t || køn == person.gsx$køn.$t && hold == "begge") {
+            babushka.feed.entry.forEach((ret) => {
+                if (filter == "alle" || filter == ret.gsx$kategori.$t) {
                     const klon = temp.cloneNode(true).content;
-                    klon.querySelector("h2").textContent = `${person.gsx$navn.$t}, ${person.gsx$alder.$t}`;
-                    klon.querySelector("img").src = person.gsx$billede.$t;
-                    klon.querySelector("a").textContent = person.gsx$github.$t;
-                    klon.querySelector("a").href = `http://www.github.com/${person.gsx$github.$t}`;
+                    klon.querySelector("h2").textContent = ret.gsx$navn.$t
+                    klon.querySelector(".billede").src = `imgs/large/${ret.gsx$billede.$t}.jpg`;
+                    klon.querySelector(".billede").textContent = ret.gsx$billede.$t;
+                    klon.querySelector(".beskrivelse").textContent = ret.gsx$kort.$t;
+                    klon.querySelector(".pris").textContent = `Pris: ${ret.gsx$pris.$t}`;
                     dest.appendChild(klon);
 
                     dest.lastElementChild.addEventListener("click", () => {
-                        location.href = `singleView.html?github=${person.gsx$github.$t}`;
+                        location.href = `singleView.html?id=${ret.gsx$id.$t}`;
                     });
                 }
             })
         }
 
 
-        function knapperVirkerKøn() {
+        function knapperVirker() {
             // får alle knapper til at virke
             document.querySelectorAll(".filter").forEach(elm => {
-                elm.addEventListener("click", filtreringKøn);
+                elm.addEventListener("click", filtrering);
             })
         }
 
-        function filtreringKøn() {
-            køn = this.dataset.køn;
+        function filtrering() {
+            filter = this.dataset.kategori;
 
+            // styrer overskriften
             document.querySelector("h1").textContent = this.textContent;
 
+            // knapperne skifter farve
             document.querySelectorAll(".filter").forEach(elm => {
                 elm.classList.remove("valgt");
             })
             this.classList.add("valgt");
 
-            visPersoner();
+            visRetter();
         }
-
-
-
-        function knapperVirkerHold() {
-
-            document.querySelectorAll(".hold").forEach(elm => {
-                elm.addEventListener("click", filtreringHold);
-            })
-        }
-
-        function filtreringHold() {
-            hold = this.dataset.hold;
-
-            document.querySelector("h3").textContent = this.textContent;
-
-            document.querySelectorAll(".hold").forEach(elm => {
-                elm.classList.remove("valgt");
-            })
-            this.classList.add("valgt");
-
-            visPersoner();
-        }
-
     </script>
-</body>
-
-</html>
+</body></html>

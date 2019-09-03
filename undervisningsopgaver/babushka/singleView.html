@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>singleView</title>
+
+    <style>
+        img {
+            width: 120px;
+            height: 150px;
+            float: right;
+            object-fit: cover;
+        }
+
+
+        #single {
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.83);
+        }
+
+        .indhold {
+            width: 70vw;
+            height: 50vh;
+            background: #fff;
+            margin: 4rem auto;
+            padding: 10px;
+        }
+
+        .luk {
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main id="single">
+        <button class="luk">oh shit go back</button>
+        <section class="indhold">
+            <article class="enkelRet">
+                <img class="billede" src="" alt="">
+                <h2></h2>
+                <p class="beskrivelse"></p>
+                <p class="pris"></p>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("id");
+        let babushka;
+        document.addEventListener("DOMContentLoaded", hentJson);
+
+
+        async function hentJson() {
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json");
+
+            babushka = await jsonData.json();
+            visRet();
+        }
+
+        function visRet() {
+            babushka.feed.entry.forEach(ret => {
+                if (ret.gsx$id.$t == id) {
+                    document.querySelector("h2").textContent = ret.gsx$navn.$t;
+                    document.querySelector(".billede").src = `imgs/large/${ret.gsx$billede.$t}.jpg`;
+                    document.querySelector(".billede").alt = ret.gsx$navn.$t;
+                    document.querySelector(".beskrivelse").textContent = ret.gsx$lang.$t;
+                    document.querySelector(".pris").textContent = `Pris: ${ret.gsx$pris.$t}`;
+                }
+            })
+
+            document.querySelector(".luk").addEventListener("click", () => {
+                history.back();
+            })
+        }
+    </script>
+
+</body></html>
