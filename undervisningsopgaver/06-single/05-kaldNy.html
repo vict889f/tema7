@@ -51,6 +51,7 @@
             height: 150px;
         }
 
+        /*
         #popup {
             position: fixed;
             top: 0;
@@ -62,6 +63,8 @@
 
 
         }
+*/
+        /*
 
         .indhold {
             width: 70vw;
@@ -70,12 +73,15 @@
             margin: 4rem auto;
             padding: 10px;
         }
+*/
 
+        /*
         .luk {
             position: fixed;
             right: 0;
             font-size: 2rem;
         }
+*/
 
         article:nth-child(even) {
             background-color: aqua;
@@ -111,17 +117,6 @@
         </article>
     </template>
 
-    <div id="popup">
-        <button class="luk">X</button>
-        <section class="indhold">
-            <article class="enkeltPerson">
-                <h2></h2>
-                <img class="billede" src="" alt="">
-                <p>Github: <a class="github" href=""></a></p>
-            </article>
-        </section>
-    </div>
-
 
     <h1>Alle</h1>
     <h3>Alle</h3>
@@ -142,7 +137,6 @@
 
 
 
-
     <script>
         document.addEventListener("DOMContentLoaded", hentJson);
         let personArray;
@@ -150,6 +144,7 @@
         let hold = "begge"
         const dest = document.querySelector("#liste");
         const temp = document.querySelector("template");
+
 
         async function hentJson() {
             console.log("hent json");
@@ -174,27 +169,12 @@
                     dest.appendChild(klon);
 
                     dest.lastElementChild.addEventListener("click", () => {
-                        visSingle(person)
+                        location.href = `singleView.html?github=${person.gsx$github.$t}`;
                     });
                 }
             })
         }
 
-        function visSingle(person) {
-            document.querySelector("#popup").style.display = "block";
-            document.querySelector("#popup .luk").addEventListener("click", lukSingle);
-
-            document.querySelector(".enkeltPerson h2").textContent = `${person.gsx$navn.$t}, ${person.gsx$alder.$t}`;
-            document.querySelector(".enkeltPerson .billede").src = person.gsx$billede.$t;
-            document.querySelector(".enkeltPerson .billede").alt = person.gsx$navn.$t;
-            document.querySelector(".enkeltPerson .github").href = `http://www.github.com/${person.gsx$github.$t}`;
-            document.querySelector(".enkeltPerson .github").textContent = person.gsx$github.$t;
-            document.querySelector(".enkeltPerson .historie").textContent = person.gsx$historie.$t;
-        }
-
-        function lukSingle() {
-            document.querySelector("#popup").style.display = "none";
-        }
 
         function knapperVirkerKøn() {
             // får alle knapper til at virke
@@ -206,10 +186,8 @@
         function filtreringKøn() {
             køn = this.dataset.køn;
 
-            // styrer overskriften
             document.querySelector("h1").textContent = this.textContent;
 
-            // knapperne skifter farve
             document.querySelectorAll(".filter").forEach(elm => {
                 elm.classList.remove("valgt");
             })
@@ -221,7 +199,7 @@
 
 
         function knapperVirkerHold() {
-            // får alle knapper til at virke
+
             document.querySelectorAll(".hold").forEach(elm => {
                 elm.addEventListener("click", filtreringHold);
             })
@@ -230,10 +208,8 @@
         function filtreringHold() {
             hold = this.dataset.hold;
 
-            // styrer overskriften
             document.querySelector("h3").textContent = this.textContent;
 
-            // knapperne skifter farve
             document.querySelectorAll(".hold").forEach(elm => {
                 elm.classList.remove("valgt");
             })
